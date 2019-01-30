@@ -13,11 +13,15 @@ nocol='\033[0m'
 
 #make kernel compiling dir...
 mkdir output
-
+echo "${CYN}Cloning Anykernel2........."
 git clone --depth=1 --no-single-branch https://github.com/raymondmiracle/anykernel2
-
+echo "${ORNG}Cloning Anykernel2 Done........."
+echo ""
+echo "${RED}Cloning Toolchain............."
 git clone --depth=1 --no-single-branch https://github.com/raymondmiracle/Toolchain toolchain
-
+echo "${ORNG}Cloning Toolchain Done........."
+echo ""
+echo "${RST}Export Started......"
 #exports ::
 #toolchain , custom build_user , custom build_host , arch
 export ARCH=arm64
@@ -29,14 +33,13 @@ export KBUILD_BUILD_HOST="OmegaHOST"
 
 compile_kernel ()
 {
-echo -e "$blue***********************************************"
-echo "          Compiling Blaze™ Kernel...          "
-echo -e "***********************************************$nocol"
+echo "${PURP}***********************************************"
+echo "          Compiling Omega-Kernel...          "
+echo "${PURP}***********************************************"
 echo ""
 make -C $(pwd) O=output k5fpr_defconfig 2>&1 | tee defconfiglog.txt
 #
 make -j32 -C $(pwd) O=output 2>&1 | tee logcat.txt
-echo -e "$yellow Copying to outdir/custom_kernel $nocol"
 cp output/arch/arm64/boot/Image.gz-dtb anykernel2/zImage
 
 if ! [ -f $ZIMAGE ];
@@ -49,7 +52,7 @@ fi
 zip_zak ()
 {
 echo -e "$cyan***********************************************"
-echo "          ZIpping Blaze™ Kernel...          "
+echo "          ZIpping Omega-Kernel...          "
 echo -e "***********************************************$nocol"
 echo ""
 echo -e "$yellow Putting custom_kernel™ Kernel in Recovery Flashable Zip $nocol"
