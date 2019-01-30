@@ -5,11 +5,16 @@
 KERNEL_DIR=$PWD
 ZIMAGE=$KERNEL_DIR/outdir/arch/arm64/boot/Image.gz-dtb
 BUILD_START=$(date +"%s")
-blue='\033[0;34m'
-cyan='\033[0;36m'
-yellow='\033[0;33m'
-red='\033[0;31m'
-nocol='\033[0m'
+ORNG=$'\033[0;33m'
+CYN=$'\033[0;36m'
+PURP=$'\033[0;35m'
+BLINK_RED=$'\033[05;31m'
+BLUE=$'\033[01;34m'
+BLD=$'\033[1m'
+GRN=$'\033[01;32m'
+RED=$'\033[01;31m'
+RST=$'\033[0m'
+YLW=$'\033[01;33m'
 
 #make kernel compiling dir...
 mkdir output
