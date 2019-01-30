@@ -1,5 +1,6 @@
 #!/bin/sh
 # Custom build script
+# Copyright (C) 2019 Raymond Miracle
 
 function Declarations {
 KERNEL_DIR=$PWD
