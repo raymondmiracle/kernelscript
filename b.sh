@@ -12,17 +12,19 @@ red='\033[0;31m'
 nocol='\033[0m'
 
 #make kernel compiling dir...
-mkdir -p outdir
+mkdir output
 
-git clone https://github.com/ChalapathiRevanth/Toolchain toolchain
+git clone --depth=1 --no-single-branch https://github.com/raymondmiracle/anykernel2
+
+git clone --depth=1 --no-single-branch https://github.com/raymondmiracle/Toolchain toolchain
 
 #exports ::
 #toolchain , custom build_user , custom build_host , arch
 export ARCH=arm64
-export ARCH_MTK_PLATFORM=mt6735
-export CROSS_COMPILE=toolchain/bin/aarch64-linux-android-
-export KBUILD_BUILD_USER="nassreirma™"
-export KBUILD_BUILD_HOST="Deepin-OS"
+export ARCH=arm64
+export CROSS_COMPILE=$PWD/toolchain/bin/aarch64-linux-android-
+export KBUILD_BUILD_USER="Ray-Miracle"
+export KBUILD_BUILD_HOST="OmegaHOST"
 
 
 compile_kernel ()
@@ -31,12 +33,11 @@ echo -e "$blue***********************************************"
 echo "          Compiling Blaze™ Kernel...          "
 echo -e "***********************************************$nocol"
 echo ""
-#hot4pro defconfig
-make -C $PWD O=outdir ARCH=arm64 rlk6737m_open_n_defconfig
+make -C $(pwd) O=output k5fpr_defconfig 2>&1 | tee defconfiglog.txt
 #
-make -j16 -C $PWD O=outdir ARCH=arm64
+make -j32 -C $(pwd) O=output 2>&1 | tee logcat.txt
 echo -e "$yellow Copying to outdir/custom_kernel $nocol"
-cp outdir/arch/arm64/boot/Image.gz-dtb outdir/custom_kernel/Image
+cp output/arch/arm64/boot/Image.gz-dtb anykernel2/zImage
 
 if ! [ -f $ZIMAGE ];
 then
@@ -52,33 +53,15 @@ echo "          ZIpping Blaze™ Kernel...          "
 echo -e "***********************************************$nocol"
 echo ""
 echo -e "$yellow Putting custom_kernel™ Kernel in Recovery Flashable Zip $nocol"
-#using lazy kernel flasher
-cd outdir
-cd custom_kernel
-    if 
-    [ -f outdir/custom_kernel/out_done ] 
-    then
-    rm -rf out_done
-    else
-    make
-    mkdir -p out_done
-    cp Hot4pro.Oreo*zip* out_done
-    cd ../../
-    sleep 0.6;
-    echo ""
-    echo ""
+cd anykernel2
+zip -r9 omegakernel-$BUILD_START * -x .git README.md
     echo "" "Done Making Recovery Flashable Zip"
     echo ""
-    echo ""
-    echo "" "Locate custom_kernel™ Kernel in the following path : "
-    echo "" "outdir/custom_kernel/out_done"
-    echo ""
     echo -e "$blue***********************************************"
-    echo "          Uploading Blaze™ Kernel as zip...          "
+    echo "          Uploading Omega-Kernel as zip...          "
     echo -e "***********************************************$nocol"
     echo ""
-    curl --upload-file outdir/custom_kernel/out_done/Hot4pro.Oreo*.zip https://transfer.sh/Hot4pro.Oreo_8.x_$BUILD_START.zip
-    echo ""
+    curl --upload-file omegakernel-$BUILD_START * https://transfer.sh/omegakernel-$BUILD_START.zip
     echo ""
     echo " Uploading Done !!!"
     echo ""
@@ -89,13 +72,3 @@ cd custom_kernel
     exit 1
     fi
 }
-case $1 in
-clean)
-#make ARCH=arm64 -j16 clean mrproper
-rm -rf include/linux/autoconf.h
-;;
-*)
-compile_kernel
-zip_zak
-;;
-esac
